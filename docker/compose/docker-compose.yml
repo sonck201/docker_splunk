@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+  splunk_enterprise:
+    image: splunk/splunk
+    container_name: splunk_enterprise
+    environment:
+      SPLUNK_START_ARGS: --accept-license
+      SPLUNK_PASSWORD: changeme
+      SPLUNK_ENABLE_DEPLOY_SERVER: 1
+      SPLUNK_USER: splunk
+      SPLUNK_GROUP: splunk
+    ports:
+    - 8000:8000
+    - 9997:9997
+    networks:
+    - splunk
+
+  splunk_uf:
+    image: splunk/universalforwarder
+    container_name: splunk_uf
+    hostname: splunk_uf
+    user: root:root
+    environment:
+      SPLUNK_START_ARGS: --accept-license
+      SPLUNK_PASSWORD: changeme
+      SPLUNK_DEPLOYMENT_SERVER: splunk_enterprise
+      SPLUNK_ADD: forward-server splunk_enterprise:9997, monitor /var/log
+    restart: always
+    volumes:
+    - ./log:/var/log
+    networks:
+    - splunk
+
+  app:
+    image: php:7-apache
+    container_name: splunk_app
+    command: php -S 0.0.0.0:8080
+    ports:
+    - 8080:8080
+    volumes:
+    - .:/var/www/html
+    networks:
+    - splunk
+
+networks:
+  splunk:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 192.168.200.0/24

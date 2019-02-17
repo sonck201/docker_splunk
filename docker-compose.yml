@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  app:
+    build: docker
+    container_name: app
+    ports:
+    - 8080:80
+    env_file:
+    - .env
+    volumes:
+    - .:/var/www/html
+    networks:
+    - splunk
+
+networks:
+  splunk:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 192.168.200.0/24

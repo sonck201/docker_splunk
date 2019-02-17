@@ -1,0 +1,25 @@
+{
+    "name": "bson/test-splunk",
+    "authors": [
+        {
+            "name": "bson",
+            "email": "bson@yahoo-corp.jp"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "monolog/monolog": "^1.23",
+        "symfony/dotenv": "^4.1",
+        "symfony/var-dumper": "^4.1"
+    },
+    "autoload": {
+        "files": [
+            "src/helper.php"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    }
+}
